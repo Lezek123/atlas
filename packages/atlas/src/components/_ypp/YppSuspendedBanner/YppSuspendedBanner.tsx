@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { SvgAlertsWarning24 } from '@/assets/icons'
+import { SvgActionNewTab, SvgAlertsWarning24 } from '@/assets/icons'
 import { Banner } from '@/components/Banner'
 import { Text } from '@/components/Text'
 import { TextButton } from '@/components/_buttons/Button'
@@ -27,7 +27,12 @@ export const YppSuspendedBanner: FC = () => (
               <ListItemMarker />
               <ListItemContent>
                 Some creators were inadvertently removed from YPP due to a bug in the YouTube Sync service (
-                <TextButton as="span" to="https://github.com/Joystream/youtube-synch/issues/337">
+                <TextButton
+                  openLinkInNewTab={true}
+                  to="https://github.com/Joystream/youtube-synch/issues/337"
+                  icon={<SvgActionNewTab />}
+                  iconPlacement="right"
+                >
                   GitHub issue
                 </TextButton>
                 )
