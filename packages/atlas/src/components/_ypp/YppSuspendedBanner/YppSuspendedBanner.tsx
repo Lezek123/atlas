@@ -18,7 +18,16 @@ export const YppSuspendedBanner: FC = () => (
       <>
         <Text variant="t200" color="colorText" as="p" margin={{ bottom: 6 }}>
           Due to recent technical issues with the YouTube Sync service, the YouTube Partner Program (YPP) has been
-          temporarily suspended until further notice.
+          temporarily suspended until further notice (
+          <TextButton
+            openLinkInNewTab={true}
+            to="https://pioneerapp.xyz/#/proposals/preview/1033"
+            icon={<SvgActionNewTab />}
+            iconPlacement="right"
+          >
+            Related proposal
+          </TextButton>
+          ).
         </Text>
         <Text variant="t200" color="colorText" as="p" margin={{ bottom: 2 }}>
           The issues we identified:
@@ -35,7 +44,7 @@ export const YppSuspendedBanner: FC = () => (
                 >
                   GitHub issue
                 </TextButton>
-                )
+                ).
               </ListItemContent>
             </ListItem>
             <ListItem>
