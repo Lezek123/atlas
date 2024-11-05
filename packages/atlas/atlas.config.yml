@@ -38,7 +38,7 @@ joystream:
 
 features:
   ypp:
-    enabled: false # Whether the YPP is currently enabled
+    suspended: true # Whether the YPP is currently suspended
     yppDelayThreshold: 300 # When the YPP sync backlog exceeds the threshold, Atlas will consider the YPP sync delayed.
     landingPageOgTitle: 'Gleev Creator Rewards Program' # Open graph title for YPP landing page - used in open graph meta tags in HTML
     landingPageOgDescription: 'Connect and monetize your content with Web3 native features on Gleev, the video streaming dApp built on Joystream blockchain.' # Open graph description for YPP landing page - used in open graph meta tags in HTML

@@ -6,6 +6,7 @@ import { LimitedWidthContainer } from '@/components/LimitedWidthContainer'
 import { Tabs } from '@/components/Tabs'
 import { Text } from '@/components/Text'
 import { ReferralLinkButton } from '@/components/_ypp/ReferralLinkButton'
+import { atlasConfig } from '@/config'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
@@ -64,7 +65,9 @@ export const YppDashboard: FC = () => {
         </Header>
         <TabsWrapper>
           <Tabs initialIndex={0} tabs={mappedTabs} onSelectTab={setCurrentVideosTab} />
-          {TABS[currentVideosTab] === 'Referrals' && <ReferralLinkButton icon={<SvgActionLinkUrl />} />}
+          {TABS[currentVideosTab] === 'Referrals' && !atlasConfig.features.ypp.suspended && (
+            <ReferralLinkButton icon={<SvgActionLinkUrl />} />
+          )}
         </TabsWrapper>
         {content}
       </LimitedWidthContainer>

@@ -37,7 +37,7 @@ export const configSchema = z.object({
   }),
   features: z.object({
     ypp: z.object({
-      enabled: z.boolean(),
+      suspended: z.boolean(),
       suspensionReasonsLink: z.string().nullable(),
       yppDelayThreshold: z.number().nullable(),
       googleConsoleClientId: z.string().nullable(),

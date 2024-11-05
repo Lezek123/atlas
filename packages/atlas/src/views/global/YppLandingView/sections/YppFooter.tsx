@@ -30,7 +30,6 @@ type YppFooterSectionProps = {
 }
 
 export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
-  const yppEnabled = atlasConfig.features.ypp.enabled
   const [titleVariant] = useSectionTextVariants()
   const smMatch = useMediaMatch('sm')
   const setIsYppChannelFlow = useYppStore((state) => state.actions.setIsYppChannelFlow)
@@ -53,7 +52,7 @@ export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
                 Get started now
               </Text>
               <Text variant={titleVariant} as="h2" color="colorCoreBaseWhite" margin={{ top: 1 }}>
-                Pave the way to Web3 with your {yppEnabled ? 'YouTube ' : ''}channel right away.
+                Pave the way to Web3 with your YouTube channel right away.
               </Text>
 
               <FlexBox
@@ -64,11 +63,9 @@ export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
                 gap={4}
                 marginTop={8}
               >
-                {yppEnabled ? (
-                  <Button onClick={onSignUpClick} fullWidth={!smMatch} size="large">
-                    Sync from YouTube
-                  </Button>
-                ) : null}
+                <Button onClick={onSignUpClick} fullWidth={!smMatch} size="large">
+                  Sync from YouTube
+                </Button>
                 {!memberChannels?.length ? (
                   <Button
                     onClick={() => {
@@ -78,7 +75,7 @@ export const YppFooter: FC<YppFooterSectionProps> = ({ onSignUpClick }) => {
                     }}
                     fullWidth={!smMatch}
                     size="large"
-                    variant={yppEnabled ? 'secondary' : 'primary'}
+                    variant="secondary"
                   >
                     Create New Channel
                   </Button>

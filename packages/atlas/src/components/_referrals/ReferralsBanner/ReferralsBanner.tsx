@@ -11,6 +11,10 @@ export const ReferralsBanner = () => {
   const navigate = useNavigate()
   const referralReward = (getTierRewards('diamond')?.referral || 0) * referralMultiplier
 
+  if (atlasConfig.features.ypp.suspended) {
+    return null
+  }
+
   return (
     <StyledBanner
       title={`Earn up to $${referralReward} for referring a channel`}

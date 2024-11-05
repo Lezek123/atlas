@@ -15,7 +15,13 @@ type Checkbox = {
 type Radio = {
   selectedValue?: string | number | boolean | null
   onChange?: (value: string | number | boolean) => void
-  options: Array<{ label: string; caption?: string; value: string | number | boolean; icon?: ReactNode }>
+  options: Array<{
+    label: string
+    caption?: string
+    value: string | number | boolean
+    icon?: ReactNode
+    disabled?: boolean
+  }>
 }
 
 export type OptionCardGroupProps = {

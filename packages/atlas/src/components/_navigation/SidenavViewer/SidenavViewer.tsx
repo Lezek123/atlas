@@ -60,13 +60,17 @@ export const viewerNavItems = [
         },
       ]
     : []),
-  {
-    icon: <SvgSidebarReferrals />,
-    name: 'Referrals',
-    expandedName: 'Referrals program',
-    to: absoluteRoutes.viewer.referrals(),
-    bottomNav: true,
-  },
+  ...(!atlasConfig.features.ypp.suspended
+    ? [
+        {
+          icon: <SvgSidebarReferrals />,
+          name: 'Referrals',
+          expandedName: 'Referrals program',
+          to: absoluteRoutes.viewer.referrals(),
+          bottomNav: true,
+        },
+      ]
+    : []),
 ]
 export const SidenavViewer: FC = () => {
   const [expanded, setExpanded] = useState(false)

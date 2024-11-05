@@ -22,6 +22,7 @@ import { BenefitCard } from '@/components/_ypp/BenefitCard'
 import { ReferralLinkButton } from '@/components/_ypp/ReferralLinkButton'
 import { ServiceStatusWidget } from '@/components/_ypp/ServiceStatusWidget/ServiceStatusWidget'
 import { YppDashboardTier } from '@/components/_ypp/YppDashboardTier'
+import { YppSuspendedBanner } from '@/components/_ypp/YppSuspendedBanner'
 import { atlasConfig } from '@/config'
 import { absoluteRoutes } from '@/config/routes'
 import { useMediaMatch } from '@/hooks/useMediaMatch'
@@ -168,9 +169,30 @@ export const YppDashboardMainTab: FC = () => {
   //   </FlexBox>
   // )
 
+  if (atlasConfig.features.ypp.suspended) {
+    return (
+      <LayoutGrid>
+        <GridItem colSpan={{ base: 12 }}>
+          <YppSuspendedBanner />
+        </GridItem>
+        <StyledGridItem colSpan={{ xxs: 12 }}>
+          <HelpContainer alignItems="center" gap={2}>
+            <SvgLogoDiscordOnDark />
+            <Text variant="t300" as="p">
+              Have a question? Ask for help on{' '}
+              <TextButton to={benefitsMetadata.discordLink} size="large">
+                Discord
+              </TextButton>
+            </Text>
+          </HelpContainer>
+        </StyledGridItem>
+      </LayoutGrid>
+    )
+  }
+
   return (
     <>
-      <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
+      {!atlasConfig.features.ypp.suspended && <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />}
       <LayoutGrid>
         <GridItem colSpan={{ base: 12 }}>
           <Banner

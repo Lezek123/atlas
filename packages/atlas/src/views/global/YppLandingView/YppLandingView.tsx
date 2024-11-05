@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
 import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
+import { YppSuspendedModal } from '@/components/_ypp/YppSuspendedModal'
 import { atlasConfig } from '@/config'
-import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
+import { absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUser } from '@/providers/user/user.hooks'
@@ -23,13 +24,7 @@ import { YppRewardSection } from './sections/YppRewardSection'
 import { YppSignupVideo } from './sections/YppSignupVideo'
 import { useGetYppSyncedChannels } from './useGetYppSyncedChannels'
 
-import { YppDisabledModal } from '../../../components/_ypp/YppDisabledModal'
-import { useRouterQuery } from '../../../hooks/useRouterQuery'
-
 export const YppLandingView: FC = () => {
-  const yppEnabled = atlasConfig.features.ypp.enabled
-  const queryReferrerId = useRouterQuery(QUERY_PARAMS.REFERRER_ID)
-  const [showYppDisabledModal, setShowYppDisabledModal] = useState(!!queryReferrerId)
   const headTags = useHeadTags('YouTube Partner Program')
   const yppModalOpenName = useYppStore((state) => state.yppModalOpenName)
   const setYppModalOpen = useYppStore((state) => state.actions.setYppModalOpenName)
@@ -41,6 +36,7 @@ export const YppLandingView: FC = () => {
   const viewerEarningsRef = useRef<HTMLDivElement | null>(null)
 
   const [wasSignInTriggered, setWasSignInTriggered] = useState(false)
+  const [showYppSuspendedModal, setShowYppSuspendedModal] = useState(true)
   const shouldContinueYppFlowAfterCreatingChannel = useYppStore(
     (store) => store.shouldContinueYppFlowAfterCreatingChannel
   )
@@ -112,22 +108,23 @@ export const YppLandingView: FC = () => {
     return 'have-channel'
   }
 
+  const yppSuspended = atlasConfig.features.ypp.suspended
+
   return (
     <Wrapper>
       {headTags}
-      <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
+      {!yppSuspended && <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />}
       <ParallaxProvider>
-        {yppEnabled ? (
-          <YppReferralBanner />
-        ) : (
-          <YppDisabledModal
-            show={showYppDisabledModal}
+        {yppSuspended && (
+          <YppSuspendedModal
+            show={showYppSuspendedModal}
             onClose={() => {
-              navigate(absoluteRoutes.viewer.ypp())
-              setShowYppDisabledModal(false)
+              setShowYppSuspendedModal(false)
+              navigate(absoluteRoutes.viewer.index())
             }}
           />
         )}
+        {!yppSuspended && <YppReferralBanner />}
         <YppHero
           onSelectChannel={() => setYppModalOpen('ypp-select-channel')}
           onSignUpClick={handleYppSignUpClick}
@@ -137,12 +134,8 @@ export const YppLandingView: FC = () => {
           onViewerEarnings={handleViewerEarnings}
         />
         <CreatorOpportunities onSignUpClick={handleYppSignUpClick} />
-        {yppEnabled ? (
-          <>
-            <YppRewardSection />
-            <YppSignupVideo />
-          </>
-        ) : null}
+        <YppRewardSection />
+        <YppSignupVideo />
         <ViewerOpportunities sectionRef={viewerEarningsRef} />
         <JoystreamRoadmap />
         {/*<YppCardsSections />*/}

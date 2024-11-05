@@ -4,6 +4,9 @@ import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router'
 
 import { axiosInstance } from '@/api/axios'
+import { SvgAlertsWarning24 } from '@/assets/icons'
+import { Banner } from '@/components/Banner'
+import { Text } from '@/components/Text'
 import { Button } from '@/components/_buttons/Button'
 import { FormField } from '@/components/_inputs/FormField'
 import { OptionCardGroupRadio } from '@/components/_inputs/OptionCardGroup'
@@ -19,6 +22,7 @@ import { useSnackbar } from '@/providers/snackbars'
 import { TX_SIGN_CANCELLED_SNACKBAR_TIMEOUT } from '@/providers/transactions/transactions.config'
 import { useTransaction } from '@/providers/transactions/transactions.hooks'
 import { useUser } from '@/providers/user/user.hooks'
+import { cVar } from '@/styles'
 import { ConsoleLogger, SentryLogger } from '@/utils/logs'
 import { useGetYppSyncedChannels } from '@/views/global/YppLandingView/useGetYppSyncedChannels'
 
@@ -299,7 +303,12 @@ export const YppDashboardSettingsTab = () => {
           <OptionCardGroupRadio
             disabled={isLoading}
             options={[
-              { value: true, label: 'Sync YouTube videos', caption: 'Imports past and future videos' },
+              {
+                value: true,
+                label: 'Sync YouTube videos',
+                caption: 'Imports past and future videos',
+                disabled: atlasConfig.features.ypp.suspended,
+              },
               {
                 value: false,
                 label: "Don't sync YouTube videos",
@@ -311,6 +320,18 @@ export const YppDashboardSettingsTab = () => {
             direction={!mdMatch ? 'vertical' : 'horizontal'}
           />
         </FormField>
+        {atlasConfig.features.ypp.suspended && !isSync && areSettingsChanged && (
+          <Banner
+            title="This change is temporarily irreversible"
+            icon={<SvgAlertsWarning24 />}
+            borderColor={cVar('colorTextCaution')}
+            description={
+              <Text variant="t100" as="span" color="colorText">
+                While YPP remains suspended you will not be able to turn YouTube sync back on.
+              </Text>
+            }
+          />
+        )}
         {isSync && (
           <FormField
             error={categoryError || undefined}
