@@ -21,12 +21,16 @@ import {
 } from '@/views/global/YppLandingView/YppLandingView.styles'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
-const viewerEarningsOptions = [
-  {
-    title: 'Earn with Referrals',
-    subtitle: 'Refer YouTube channels and earn when they sign up using your link.',
-    image: viewer_earnings_referrals,
-  },
+const viewerEarningsOptions = (yppEnabled: boolean) => [
+  ...(yppEnabled
+    ? [
+        {
+          title: 'Earn with Referrals',
+          subtitle: 'Refer YouTube channels and earn when they sign up using your link.',
+          image: viewer_earnings_referrals,
+        },
+      ]
+    : []),
   {
     title: 'Claim Channels Revenue Share',
     subtitle: `Buy creator tokens and claim part of channel's revenue.`,
@@ -49,6 +53,7 @@ const viewerEarningsOptions = [
 ]
 
 export const ViewerOpportunities = ({ sectionRef }: { sectionRef: MutableRefObject<HTMLDivElement | null> }) => {
+  const yppEnabled = atlasConfig.features.ypp.enabled
   const mdMatch = useMediaMatch('md')
   const smMatch = useMediaMatch('sm')
   const [titleVariant, subtitleVariant] = useSectionTextVariants()
@@ -87,7 +92,7 @@ export const ViewerOpportunities = ({ sectionRef }: { sectionRef: MutableRefObje
             </Text>
           </HeaderGridItem>
           <EarningsBox colSpan={{ base: 12, xs: 10 }} colStart={{ base: 1, xs: 2 }}>
-            {viewerEarningsOptions.map(({ title, subtitle, image }, idx) => (
+            {viewerEarningsOptions(yppEnabled).map(({ title, subtitle, image }, idx) => (
               <FlexBox key={idx} gap={2} flow="column">
                 <ImageBox>
                   <Image alt={`${title} image`} src={image} width="529px" height="360" />

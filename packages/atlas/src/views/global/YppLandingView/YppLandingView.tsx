@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
 import { YppReferralBanner } from '@/components/_ypp/YppReferralBanner'
-import { absoluteRoutes } from '@/config/routes'
+import { atlasConfig } from '@/config'
+import { QUERY_PARAMS, absoluteRoutes } from '@/config/routes'
 import { useHeadTags } from '@/hooks/useHeadTags'
 import { useSegmentAnalytics } from '@/hooks/useSegmentAnalytics'
 import { useUser } from '@/providers/user/user.hooks'
@@ -22,7 +23,13 @@ import { YppRewardSection } from './sections/YppRewardSection'
 import { YppSignupVideo } from './sections/YppSignupVideo'
 import { useGetYppSyncedChannels } from './useGetYppSyncedChannels'
 
+import { YppDisabledModal } from '../../../components/_ypp/YppDisabledModal'
+import { useRouterQuery } from '../../../hooks/useRouterQuery'
+
 export const YppLandingView: FC = () => {
+  const yppEnabled = atlasConfig.features.ypp.enabled
+  const queryReferrerId = useRouterQuery(QUERY_PARAMS.REFERRER_ID)
+  const [showYppDisabledModal, setShowYppDisabledModal] = useState(!!queryReferrerId)
   const headTags = useHeadTags('YouTube Partner Program')
   const yppModalOpenName = useYppStore((state) => state.yppModalOpenName)
   const setYppModalOpen = useYppStore((state) => state.actions.setYppModalOpenName)
@@ -110,7 +117,17 @@ export const YppLandingView: FC = () => {
       {headTags}
       <YppAuthorizationModal unSyncedChannels={unsyncedChannels} />
       <ParallaxProvider>
-        <YppReferralBanner />
+        {yppEnabled ? (
+          <YppReferralBanner />
+        ) : (
+          <YppDisabledModal
+            show={showYppDisabledModal}
+            onClose={() => {
+              navigate(absoluteRoutes.viewer.ypp())
+              setShowYppDisabledModal(false)
+            }}
+          />
+        )}
         <YppHero
           onSelectChannel={() => setYppModalOpen('ypp-select-channel')}
           onSignUpClick={handleYppSignUpClick}
@@ -120,8 +137,12 @@ export const YppLandingView: FC = () => {
           onViewerEarnings={handleViewerEarnings}
         />
         <CreatorOpportunities onSignUpClick={handleYppSignUpClick} />
-        <YppRewardSection />
-        <YppSignupVideo />
+        {yppEnabled ? (
+          <>
+            <YppRewardSection />
+            <YppSignupVideo />
+          </>
+        ) : null}
         <ViewerOpportunities sectionRef={viewerEarningsRef} />
         <JoystreamRoadmap />
         {/*<YppCardsSections />*/}

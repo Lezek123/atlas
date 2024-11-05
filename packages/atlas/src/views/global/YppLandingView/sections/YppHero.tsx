@@ -73,6 +73,7 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
     ? channels?.map((channel) => <PaidChannelCard key={channel.id} channel={channel} />)
     : Array.from({ length: 30 }).map((_, idx) => <PaidChannelCard key={idx} loading />)
   const widgetContentTextVariant = mdMatch ? ('h700' as const) : ('h600' as const)
+  const yppEnabled = atlasConfig.features.ypp.enabled
 
   return (
     <HeroBackgroundContainer noBackground>
@@ -140,14 +141,16 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
                       </Button>
                     ) : (
                       <FlexBox gap={4} flow={xsMatch ? 'row' : 'column'} alignItems="center" justifyContent="center">
-                        <Button
-                          onClick={onSignUpClick}
-                          fullWidth={!xsMatch}
-                          size={xxsMatch && !xsMatch ? 'large' : smMatch ? 'large' : 'medium'}
-                          id="rewards-sync-button"
-                        >
-                          Sync from YouTube
-                        </Button>
+                        {yppEnabled ? (
+                          <Button
+                            onClick={onSignUpClick}
+                            fullWidth={!xsMatch}
+                            size={xxsMatch && !xsMatch ? 'large' : smMatch ? 'large' : 'medium'}
+                            id="rewards-sync-button"
+                          >
+                            Sync from YouTube
+                          </Button>
+                        ) : null}
                         {!memberChannels?.length ? (
                           <Button
                             onClick={() => {
@@ -157,7 +160,7 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
                             }}
                             fullWidth={!xsMatch}
                             size={xxsMatch && !xsMatch ? 'large' : smMatch ? 'large' : 'medium'}
-                            variant="secondary"
+                            variant={yppEnabled ? 'secondary' : 'primary'}
                             id="rewards-new-channel-button"
                           >
                             Create New Channel
@@ -270,17 +273,19 @@ export const YppHero: FC<YppHeroProps> = ({ onSignUpClick, yppAtlasStatus, onVie
           </GridItem>
         </LayoutGrid>
 
-        <ImagesContainer width="100%" justifyContent="center">
-          <FrontImage src={crt_dashboard} alt="Hero back" width="1152" height="824" />
-          {xsMatch && (
-            <>
-              <RightImage src={crt_card} alt="Hero back" width="1152" height="824" />
-              <LeftImage src={payments} alt="Hero back" width="1152" height="824" />
-            </>
-          )}
-        </ImagesContainer>
+        {yppEnabled ? (
+          <ImagesContainer width="100%" justifyContent="center">
+            <FrontImage src={crt_dashboard} alt="Hero back" width="1152" height="824" />
+            {xsMatch && (
+              <>
+                <RightImage src={crt_card} alt="Hero back" width="1152" height="824" />
+                <LeftImage src={payments} alt="Hero back" width="1152" height="824" />
+              </>
+            )}
+          </ImagesContainer>
+        ) : null}
       </StyledLimitedWidthContainerHero>
-      {items && items.length >= 7 && (
+      {yppEnabled && items && items.length >= 7 && (
         <StyledInfiniteCarousel
           headerGridItemProps={{ colStart: { base: 1, lg: 2 }, colSpan: { base: 12, lg: 10 } }}
           carouselHorizonthalOffset={-32}

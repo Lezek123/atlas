@@ -24,12 +24,16 @@ import {
 } from '@/views/global/YppLandingView/YppLandingView.styles'
 import { useSectionTextVariants } from '@/views/global/YppLandingView/sections/useSectionTextVariants'
 
-const earningsOptions = [
-  {
-    title: 'YouTubers',
-    subtitle: 'Get sign up bonus and sync rewards with connecting YouTube channel.',
-    image: earning_yt,
-  },
+const earningsOptions = (yppEnabled: boolean) => [
+  ...(yppEnabled
+    ? [
+        {
+          title: 'YouTubers',
+          subtitle: 'Get sign up bonus and sync rewards with connecting YouTube channel.',
+          image: earning_yt,
+        },
+      ]
+    : []),
   {
     title: 'Creator Tokens',
     subtitle: `Mint your own token and sell it on open market to raise funding for your ${atlasConfig.general.appName} channel.`,
@@ -40,14 +44,19 @@ const earningsOptions = [
     subtitle: 'Mint your NFTs and earn from selling on marketplace and royalties with every future transaction.',
     image: earning_nfts,
   },
-  {
-    title: 'More earning',
-    subtitle: 'Earn with building out community and social promotions.',
-    image: earning_more,
-  },
+  ...(yppEnabled
+    ? [
+        {
+          title: 'More earning',
+          subtitle: 'Earn with building out community and social promotions.',
+          image: earning_more,
+        },
+      ]
+    : []),
 ]
 
 export const CreatorOpportunities = ({ onSignUpClick }: { onSignUpClick: () => void }) => {
+  const yppEnabled = atlasConfig.features.ypp.enabled
   const setIsYppChannelFlow = useYppStore((state) => state.actions.setIsYppChannelFlow)
   const setAuthModalOpenName = useAuthStore((state) => state.actions.setAuthModalOpenName)
   const { trackRewardsCreateChannelButtonClick } = useSegmentAnalytics()
@@ -91,7 +100,7 @@ export const CreatorOpportunities = ({ onSignUpClick }: { onSignUpClick: () => v
             </Text>
           </HeaderGridItem>
           <EarningsBox colSpan={{ base: 12, xs: 10 }} colStart={{ base: 1, xs: 2 }}>
-            {earningsOptions.map(({ title, subtitle, image }, idx) => (
+            {earningsOptions(yppEnabled).map(({ title, subtitle, image }, idx) => (
               <FlexBox key={idx} gap={2} flow="column">
                 <ImageBox>
                   <Image alt={`${title} image`} src={image} width="610px" height="420px" />
@@ -116,9 +125,11 @@ export const CreatorOpportunities = ({ onSignUpClick }: { onSignUpClick: () => v
             colStart={{ base: 1 }}
           >
             <FlexBox width="100%" flow={xsMatch ? 'row' : 'column'} alignItems="center" justifyContent="center" gap={4}>
-              <Button onClick={onSignUpClick} fullWidth={!xsMatch} size="large">
-                Sync from YouTube
-              </Button>
+              {yppEnabled ? (
+                <Button onClick={onSignUpClick} fullWidth={!xsMatch} size="large">
+                  Sync from YouTube
+                </Button>
+              ) : null}
               {!memberChannels?.length ? (
                 <Button
                   onClick={() => {
@@ -128,7 +139,7 @@ export const CreatorOpportunities = ({ onSignUpClick }: { onSignUpClick: () => v
                   }}
                   fullWidth={!xsMatch}
                   size="large"
-                  variant="secondary"
+                  variant={yppEnabled ? 'secondary' : 'primary'}
                 >
                   Create New Channel
                 </Button>
