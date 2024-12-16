@@ -223,7 +223,7 @@ export const InternalComment: FC<InternalCommentProps> = ({
                     {!!(tipTier && tipAmount) && (
                       <>
                         <CommentHeaderDot />
-                        <CommentTierBadge tier={tipTier} amount={hapiBnToTokenNumber(new BN(tipAmount))} />
+                        <CommentTierBadge tier={tipTier} amount={Math.floor(hapiBnToTokenNumber(new BN(tipAmount)))} />
                       </>
                     )}
                     <CommentHeaderDot />

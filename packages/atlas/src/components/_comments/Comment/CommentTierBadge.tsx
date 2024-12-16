@@ -57,7 +57,7 @@ export const CommentTierBadge = ({ tier, amount }: CommentTierBadgeProps) => {
     <BadgeFrame tier={tier}>
       {getTierIcon(tier, 'small')}
       <Text as="span" variant="t100" color="colorText">
-        {formatNumber(amount)} JOY
+        {formatNumber(Math.floor(amount))} JOY
       </Text>
     </BadgeFrame>
   )
