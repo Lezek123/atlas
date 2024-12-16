@@ -2,13 +2,18 @@ import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarSize } from '@/components/Avatar'
-import { sizes } from '@/styles'
+import { media, sizes } from '@/styles'
 
 export const Container = styled.div`
   width: 100%;
-  display: inline-flex;
+  display: inline-grid;
   align-items: center;
   text-decoration: none;
+  grid-template-columns: auto 1fr;
+  ${media.xs} {
+    grid-template-columns: auto 1fr auto;
+    flex-wrap: no-wrap;
+  }
 `
 
 type AvatarProps = {
@@ -20,14 +25,28 @@ export const StyledAvatar = styled(Avatar)<AvatarProps>`
   margin-right: ${({ withHandle, size }) => (withHandle ? (size === 40 ? sizes(4) : sizes(3)) : 0)};
 `
 
-export const TitleWrapper = styled.div<{ followButton?: boolean }>`
-  flex: ${({ followButton }) => followButton && 1};
+export const ActionButtons = styled.div`
   display: flex;
-  align-items: center;
-`
+  grid-column-start: 1;
+  grid-column-end: 3;
+  gap: ${sizes(4)};
+  margin-top: ${sizes(4)};
 
-export const FollowButtonWrapper = styled.div`
-  margin-left: auto;
+  button,
+  > div {
+    width: 100%;
+  }
+  ${media.xs} {
+    grid-column-start: auto;
+    grid-column-end: auto;
+    margin-top: 0;
+    justify-content: flex-end;
+
+    button,
+    > div {
+      width: auto;
+    }
+  }
 `
 
 type StyledLinkProps = {
