@@ -27,8 +27,7 @@ export const StyledAvatar = styled(Avatar)<AvatarProps>`
 
 export const ActionButtons = styled.div`
   display: flex;
-  grid-column-start: 1;
-  grid-column-end: 3;
+  grid-column: span 2;
   gap: ${sizes(4)};
   margin-top: ${sizes(4)};
 
@@ -37,8 +36,7 @@ export const ActionButtons = styled.div`
     width: 100%;
   }
   ${media.xs} {
-    grid-column-start: auto;
-    grid-column-end: auto;
+    grid-column: auto;
     margin-top: 0;
     justify-content: flex-end;
 
